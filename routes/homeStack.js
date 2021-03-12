@@ -1,7 +1,8 @@
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import Home from '../screens/home';
-import Details from '../screens/details';
+import BookCollection from '../screens/bookCollection';
+import BookDescription from '../screens/bookDescription';
 
 const screens = {
     Home: {
@@ -10,10 +11,16 @@ const screens = {
             title: 'BookShell',
         }
     },
-    Details: {
-        screen: Details,
+    BookCollection: {
+        screen: BookCollection,
         navigationOptions: {
-            title: 'YOUR BOOKS',
+            title: 'AVAILABLE BOOKS',
+        }
+    },
+    BookDescription: {
+        screen: BookDescription,
+        navigationOptions: {
+            title: 'BOOK DESCRIPTION',
         }
     },
 }

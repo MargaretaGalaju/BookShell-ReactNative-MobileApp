@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, FlatList, Button, View, ImageBackground } from 'react-native';
+import { StyleSheet, Text, FlatList, TouchableHighlight, View, ImageBackground } from 'react-native';
 
 export default function Home({ navigation }) {
-    const [name, setName] = useState('');
     const [bookCollections, setBookCollections] = useState([
-      {text: 'Romantic Books', uri: '../assets/images/bookCollectionBackground/romantic.jpeg', id: 0},
+      {text: 'Romantic Books', id: 0},
       {text: 'Fantasy Books', id: 1},
       {text: 'Detective Books', id: 2},
       {text: 'Criminal Books', id: 3},
@@ -12,11 +11,9 @@ export default function Home({ navigation }) {
       {text: 'Children Books', id: 5},
   ]);
 
-    const onCollectionClick = (index) => {
-      if (index) {
-        navigation.navigate('Details', {collection: bookCollections[index]});
-      }
-    }
+  const onCollectionClick = (index) => {
+    navigation.navigate('BookCollection', {collection: bookCollections[index]?.text});
+  }
 
     const getImageUrlLink = (index) => {
       switch (index) {
@@ -40,12 +37,15 @@ export default function Home({ navigation }) {
             data={bookCollections}
             keyExtractor={item => item.id}
             renderItem={({ item })=> (
-              <View style={styles.collection} onPress={() => this.onCollectionClick(item.id)}>
-                <ImageBackground source={() => this.getImageUrlLink(item.id)} style={styles.image}>
-                  <Text style={styles.bookText}>{item.text}</Text>
-                </ImageBackground>
-             </View>
-          )}
+
+              <TouchableHighlight onPress={onCollectionClick.bind(this, item.id)} underlayColor="white">
+                <View style={styles.collection}>
+                  <ImageBackground source={() => this.getImageUrlLink(item.id)} style={styles.image}>
+                    <Text style={styles.bookText}>{item.text}</Text>
+                  </ImageBackground>
+              </View>
+              </TouchableHighlight>
+            )}
           />
         </View>
       </View>
