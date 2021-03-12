@@ -23,7 +23,7 @@ export default function Details({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text>Hi, { navigation.getParam('name') }</Text>
+            <Text>Hi, { navigation.getParam('collection').text }</Text>
             <Text style={styles.text}>Hi! This is my second screen!</Text>
             
             <View style={styles.row}>

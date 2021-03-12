@@ -7,18 +7,26 @@ const screens = {
     Home: {
         screen: Home,
         navigationOptions: {
-            title: 'Welcome',
+            title: 'BookShell',
         }
     },
     Details: {
-        screen: Details
+        screen: Details,
+        navigationOptions: {
+            title: 'YOUR BOOKS',
+        }
     },
 }
 
 const HomeStack = createStackNavigator(screens, {
     defaultNavigationOptions: {
+        headerTitleStyle: {
+            alignSelf: 'center',
+            backgroundColor: '#88C5CC',
+            fontFamily: 'montserrat-regular',
+        },
         headerStyle: {
-            backgroundColor: '#e1e1e1',
+            backgroundColor: '#88C5CC',
         }
     }
 });
