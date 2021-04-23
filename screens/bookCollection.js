@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, ActivityIndicator, View, TouchableHighlight, FlatList } from 'react-native';
+import { Button, Text, ActivityIndicator, View, FlatList } from 'react-native';
+import { styles } from '../assets/styles/styles'
 
 export default function BookCollection({ navigation }) {
     const [isLoading, setLoading] = useState(true);
@@ -24,6 +25,7 @@ export default function BookCollection({ navigation }) {
         Name: item.volumeInfo.title,
         Description: item.volumeInfo.description,
       }
+
       fetch(`https://606c6493c445570017a46ed8.mockapi.io/BookShell`, {
         method: 'POST',
         headers: {
@@ -33,15 +35,8 @@ export default function BookCollection({ navigation }) {
         body: JSON.stringify(bookObjectBody)
       })
         .then((response) => response.json())
-        .then((json) => 
-          {
-            console.log(json)
-          }
-        )
         .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
     }
-  
   
     return (
       <View>
@@ -63,38 +58,3 @@ export default function BookCollection({ navigation }) {
       </View>
     );
   }
-
-  const styles = StyleSheet.create({
-    title: {
-      fontFamily: 'montserrat-regular',
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginTop: 20,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center'
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      marginTop: 20,
-      marginRight: 20,
-      marginLeft: 20,
-      padding: 10,
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: '#e1e1e1'
-    },
-    button: {
-      alignContent: 'flex-end',
-      marginLeft: 10,
-    },  
-    bookName: {
-        fontFamily: 'montserrat-regular',
-        flex: 1,
-        maxWidth: '50%',
-        overflow: 'hidden',
-        marginRight: 20,
-    }
-  });
