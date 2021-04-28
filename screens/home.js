@@ -11,81 +11,127 @@ export default function Home({ navigation }) {
       {text: 'Children Books', id: 5},
   ]);
 
+  const [myBookCollection, setMyBookCollections] = useState([
+    {text: 'Saved Books', id: 0},
+]);
+
   const onCollectionClick = (index) => {
     navigation.navigate('BookCollection', {collection: bookCollections[index]?.text});
   }
 
-    const getImageUrlLink = (index) => {
-      switch (index) {
-        case 0: return { uri: '../assets/images/bookCollectionBackground/romantic.jpeg' };
-        case 1: return { uri: '../assets/images/bookCollectionBackground/fantasy.jfif' };
-        case 2: return { uri: '../assets/images/bookCollectionBackground/detective2.jfif' };
-        case 3: return { uri: '../assets/images/bookCollectionBackground/detective.jpg' };
-        case 4: return { uri: '../assets/images/bookCollectionBackground/action.webp' };
-        case 5: return { uri: '../assets/images/bookCollectionBackground/children.jpg' };
-        default: return { uri: 'https://reactjs.org/logo-og.png' };
-      }
-    }
+  const navigateToMyBooks = () => {
+    navigation.navigate('MyBooks');
+  }
 
     return (
       <View style={styles.layout}>
         <View style={styles.collectionsWrapper}>
-          <Text style={styles.text}>Collections:</Text>
+          <Text style={styles.blockTitle}>GOOGLE COLLECTION</Text>
 
           <FlatList
             horizontal
+            style={styles.flatList}
             data={bookCollections}
             keyExtractor={item => item.id}
             renderItem={({ item })=> (
 
               <TouchableHighlight onPress={onCollectionClick.bind(this, item.id)} underlayColor="white">
                 <View style={styles.collection}>
-                  <ImageBackground source={() => this.getImageUrlLink(item.id)} style={styles.image}>
-                    <Text style={styles.bookText}>{item.text}</Text>
-                  </ImageBackground>
+                <Text style={styles.bookText}>{item.text}</Text>
               </View>
               </TouchableHighlight>
             )}
           />
+
         </View>
+
+          <View style={styles.collectionsWrapper}>
+            <Text style={styles.blockTitle}>My books</Text>
+
+            <FlatList
+              horizontal
+              style={styles.flatList}
+              data={myBookCollection}
+              keyExtractor={item => item.id}
+              renderItem={({ item })=> (
+
+                <TouchableHighlight onPress={navigateToMyBooks.bind(this)} underlayColor="white">
+                  <View style={styles.collection}>
+                      <Text style={styles.bookText}>{item.text}</Text>
+                </View>
+                </TouchableHighlight>
+              )}
+            />
+          </View>
+
+          {/* <View style={styles.collectionsWrapper}>
+            <Text style={styles.blockTitle}>Favorites</Text>
+
+            <FlatList
+              horizontal
+              style={styles.flatList}
+              data={bookCollections}
+              keyExtractor={item => item.id}
+              renderItem={({ item })=> (
+
+                <TouchableHighlight onPress={onCollectionClick.bind(this, item.id)} underlayColor="white">
+                  <View style={styles.collection}>
+                      <Text style={styles.bookText}>{item.text}</Text>
+                </View>
+                </TouchableHighlight>
+              )}
+            />
+          </View> */}
       </View>
       );
   }
 
   const styles = StyleSheet.create({
-    text: {
-        fontFamily: 'montserrat-regular'
-    },
     layout: {
       backgroundColor: '#fff',
-        fontFamily: 'montserrat-regular',
-      },
-      button: {
-        margin: 20,
-        alignItems: 'center',
-        fontFamily: 'montserrat-regular',
-        justifyContent: 'center',
-      },
-      collectionsWrapper: {
-        marginTop: 20,
-        fontFamily: 'montserrat-regular',
-        padding: 10,
-        display: 'flex',
-        flexDirection: 'column',
-      },
-      collection: {
-        margin: 10,
-        padding: 30,
-        fontFamily: 'montserrat-regular',
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#e1e1e1'
-      },
-      image: {
-        resizeMode: 'cover',
-        justifyContent: 'center',
-        width: 50
-      },
-      bookText: {
-      }
+      fontFamily: 'montserrat-regular',
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    collectionsWrapper: {
+      marginTop: 20,
+      fontFamily: 'montserrat-regular',
+      padding: 20,
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    blockTitle: {
+      fontSize: 17,
+      fontWeight: "600",
+      fontFamily: 'montserrat-regular',
+      marginBottom: 10,
+    },
+    button: {
+      margin: 20,
+      alignItems: 'center',
+      fontFamily: 'montserrat-regular',
+      justifyContent: 'center',
+    },
+   
+    collection: {
+      marginRight: 10,
+      padding: 20,
+      fontFamily: 'montserrat-regular',
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: '#e1e1e1', 
+      height: 100,
+      width: 150,
+    },
+    image: {
+      resizeMode: 'cover',
+      justifyContent: 'center',
+      width: 150,
+      height:100,
+    },
+    flatList: {
+      paddingBottom: 5,
+    },
+    bookText: {
+    }
   });

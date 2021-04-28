@@ -16,6 +16,32 @@ export default function BookCollection({ navigation }) {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
     }, []);
+
+    const addToMyBooks = (item) => {
+      const bookObjectBody = {
+        Id: `${Math.round(Math.random()*99999999999)}`,
+        CreatedAt: `${new Date()}`,
+        Name: item.volumeInfo.title,
+        Description: item.volumeInfo.description,
+      }
+      fetch(`https://606c6493c445570017a46ed8.mockapi.io/BookShell`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bookObjectBody)
+      })
+        .then((response) => response.json())
+        .then((json) => 
+          {
+            console.log(json)
+          }
+        )
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+    }
+  
   
     return (
       <View>
@@ -25,9 +51,11 @@ export default function BookCollection({ navigation }) {
                 data={data}
                 keyExtractor={({ id }, index) => id}
                 renderItem={({ item }) => (
-                <TouchableHighlight onPress={onBookClick.bind(this, item.volumeInfo.description)} underlayColor="white">
-                    <Text style={styles.bookName}>{item.volumeInfo.title}</Text>
-                </TouchableHighlight>
+                <View style={styles.row}>
+                    <Text style={styles.bookName}  onPress={onBookClick.bind(this, item.volumeInfo.description)} >{item.volumeInfo.title}</Text>
+                    <Button style={styles.button} title="Add To My Books" onPress={addToMyBooks.bind(this, item)}/>
+                </View>
+
                 )}
             />
             )
@@ -47,14 +75,26 @@ export default function BookCollection({ navigation }) {
       justifyContent: 'center',
       textAlign: 'center'
     },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+      marginTop: 20,
+      marginRight: 20,
+      marginLeft: 20,
+      padding: 10,
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: '#e1e1e1'
+    },
+    button: {
+      alignContent: 'flex-end',
+      marginLeft: 10,
+    },  
     bookName: {
         fontFamily: 'montserrat-regular',
-        marginTop: 20,
+        flex: 1,
+        maxWidth: '50%',
+        overflow: 'hidden',
         marginRight: 20,
-        marginLeft: 20,
-        padding: 10,
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#e1e1e1'
     }
   });
