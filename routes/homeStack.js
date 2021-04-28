@@ -1,24 +1,39 @@
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import Home from '../screens/home';
-import Details from '../screens/details';
+import BookCollection from '../screens/bookCollection';
+import BookDescription from '../screens/bookDescription';
 
 const screens = {
     Home: {
         screen: Home,
         navigationOptions: {
-            title: 'Welcome',
+            title: 'BookShell',
         }
     },
-    Details: {
-        screen: Details
+    BookCollection: {
+        screen: BookCollection,
+        navigationOptions: {
+            title: 'AVAILABLE BOOKS',
+        }
+    },
+    BookDescription: {
+        screen: BookDescription,
+        navigationOptions: {
+            title: 'BOOK DESCRIPTION',
+        }
     },
 }
 
 const HomeStack = createStackNavigator(screens, {
     defaultNavigationOptions: {
+        headerTitleStyle: {
+            alignSelf: 'center',
+            backgroundColor: '#88C5CC',
+            fontFamily: 'montserrat-regular',
+        },
         headerStyle: {
-            backgroundColor: '#e1e1e1',
+            backgroundColor: '#88C5CC',
         }
     }
 });

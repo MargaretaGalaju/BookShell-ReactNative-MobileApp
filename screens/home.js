@@ -1,62 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, Button, View } from 'react-native';
+import { StyleSheet, Text, FlatList, TouchableHighlight, View, ImageBackground } from 'react-native';
 
-export default function Home({ navigation, route }) {
-      React.useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            console.log('lala');
-        });
-    
-        return unsubscribe;
-      }, [navigation]);
+export default function Home({ navigation }) {
+    const [bookCollections, setBookCollections] = useState([
+      {text: 'Romantic Books', id: 0},
+      {text: 'Fantasy Books', id: 1},
+      {text: 'Detective Books', id: 2},
+      {text: 'Criminal Books', id: 3},
+      {text: 'Action Books', id: 4},
+      {text: 'Children Books', id: 5},
+  ]);
 
-    const [name, setName] = useState('');
-    const [hobbies, setHobbies] = useState([]);
+  const onCollectionClick = (index) => {
+    navigation.navigate('BookCollection', {collection: bookCollections[index]?.text});
+  }
 
-    const onContinue = () => {
-      navigation.navigate('Details', {name: name});
+    const getImageUrlLink = (index) => {
+      switch (index) {
+        case 0: return { uri: '../assets/images/bookCollectionBackground/romantic.jpeg' };
+        case 1: return { uri: '../assets/images/bookCollectionBackground/fantasy.jfif' };
+        case 2: return { uri: '../assets/images/bookCollectionBackground/detective2.jfif' };
+        case 3: return { uri: '../assets/images/bookCollectionBackground/detective.jpg' };
+        case 4: return { uri: '../assets/images/bookCollectionBackground/action.webp' };
+        case 5: return { uri: '../assets/images/bookCollectionBackground/children.jpg' };
+        default: return { uri: 'https://reactjs.org/logo-og.png' };
+      }
     }
-  
-    const onInputChange = (value) => {
-      setName(value);
-    }
 
-    if (navigation?.hobbies?.length){
-        setHobbies(navigation.hobies);
-    }
+    return (
+      <View style={styles.layout}>
+        <View style={styles.collectionsWrapper}>
+          <Text style={styles.text}>Collections:</Text>
 
-    if (hobbies.length) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.text}>Dear {name}, here are your hobbies: </Text>
-            </View>
-        );
-    } else {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.text}>Hi! This is my home screen!</Text>
-                <TextInput 
-                    style={styles.input}
-                    placeholder="Enter your name"
-                    onChangeText={onInputChange}
-                />
-                <View style={styles.button}>
-                    <Button title="Continue" onPress={onContinue}/>
-                </View>
-            </View>
-        );
-    }
+          <FlatList
+            horizontal
+            data={bookCollections}
+            keyExtractor={item => item.id}
+            renderItem={({ item })=> (
+
+              <TouchableHighlight onPress={onCollectionClick.bind(this, item.id)} underlayColor="white">
+                <View style={styles.collection}>
+                  <ImageBackground source={() => this.getImageUrlLink(item.id)} style={styles.image}>
+                    <Text style={styles.bookText}>{item.text}</Text>
+                  </ImageBackground>
+              </View>
+              </TouchableHighlight>
+            )}
+          />
+        </View>
+      </View>
+      );
   }
 
   const styles = StyleSheet.create({
     text: {
         fontFamily: 'montserrat-regular'
     },
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+    layout: {
+      backgroundColor: '#fff',
         fontFamily: 'montserrat-regular',
       },
       button: {
@@ -65,13 +66,26 @@ export default function Home({ navigation, route }) {
         fontFamily: 'montserrat-regular',
         justifyContent: 'center',
       },
-      input: {
+      collectionsWrapper: {
         marginTop: 20,
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#e1e1e1',
-        width: 300,
         fontFamily: 'montserrat-regular',
         padding: 10,
+        display: 'flex',
+        flexDirection: 'column',
+      },
+      collection: {
+        margin: 10,
+        padding: 30,
+        fontFamily: 'montserrat-regular',
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: '#e1e1e1'
+      },
+      image: {
+        resizeMode: 'cover',
+        justifyContent: 'center',
+        width: 50
+      },
+      bookText: {
       }
   });
