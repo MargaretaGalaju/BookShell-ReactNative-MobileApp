@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, FlatList, TouchableHighlight, View } from 'react-native';
-import { styles } from '../assets/styles/styles'
+import { connect } from 'react-redux';
+import { setBooks } from '../store/BooksActions';
+import { bindActionCreators } from 'redux';
 
-export default function Home({ navigation }) {
-    const [bookCollections, setBookCollections] = useState([
+const mapStateToProps = (state) => {
+  const { subjects } = state;
+  return { subjects }
+};
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    setBooks,
+  }, dispatch)
+);
+ 
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+export function Home(props) {
+  const [bookCollections, setBookCollections] = useState([
       {text: 'Romantic Books', id: 0},
       {text: 'Fantasy Books', id: 1},
       {text: 'Detective Books', id: 2},
@@ -17,11 +32,23 @@ export default function Home({ navigation }) {
 ]);
 
   const onCollectionClick = (index) => {
-    navigation.navigate('BookCollection', {collection: bookCollections[index]?.text});
+    props.navigation.navigate('BookCollection', {collection: bookCollections[index]?.text});
   }
 
+  useEffect(() => {
+    fetch(`https://606c6493c445570017a46ed8.mockapi.io/BookShell`)
+      .then((response) => response.json())
+      .then((json) => {
+        props.setBooks(json);
+        console.log('onemoretime');
+      }
+      )
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, []);
+
   const navigateToMyBooks = () => {
-    navigation.navigate('MyBooks');
+    props.navigation.navigate('MyBooks');
   }
 
     return (

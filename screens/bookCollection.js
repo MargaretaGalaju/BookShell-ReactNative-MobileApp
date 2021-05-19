@@ -1,19 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Text, ActivityIndicator, View, FlatList } from 'react-native';
-import { styles } from '../assets/styles/styles'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addBook } from '../store/BooksActions';
 
-export default function BookCollection({ navigation }) {
+const mapStateToProps = (state) => {
+  const { subjects } = state;
+  return { subjects }
+};
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    addBook,
+  }, dispatch)
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookCollection);
+
+export function BookCollection(props) {
     const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
+    const [listOfBooks, setListOfBooks] = useState([]);
 
     const onBookClick = (description) => {
-        navigation.navigate('BookDescription', {description: description});
+      props.navigation.navigate('BookDescription', {description: description});
     }
 
     useEffect(() => {
-      fetch(`https://www.googleapis.com/books/v1/volumes?q=${navigation.getParam('collection')}`)
+      fetch(`https://www.googleapis.com/books/v1/volumes?q=${props.navigation.getParam('collection')}`)
         .then((response) => response.json())
-        .then((json) => setData(json.items))
+        .then((json) => setListOfBooks(json.items))
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
     }, []);
@@ -35,15 +50,20 @@ export default function BookCollection({ navigation }) {
         body: JSON.stringify(bookObjectBody)
       })
         .then((response) => response.json())
+        .then((newBook) => 
+          {
+            props.addBook(newBook);
+          }
+        )
         .catch((error) => console.error(error))
     }
   
     return (
       <View>
-        <Text style={styles.title}>{ navigation.getParam('collection') ? navigation.getParam('collection') : 'List of books:' }</Text>
+        <Text style={styles.title}>{ props.navigation.getParam('collection') ? props.navigation.getParam('collection') : 'List of books:' }</Text>
             {isLoading ? <ActivityIndicator/> : (
             <FlatList
-                data={data}
+                data={listOfBooks}
                 keyExtractor={({ id }, index) => id}
                 renderItem={({ item }) => (
                 <View style={styles.row}>

@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
 import { Text, TextInput, View, TouchableOpacity } from 'react-native';
-import { styles } from '../assets/styles/styles'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addBook } from '../store/BooksActions';
 
-export default function AddNewBook({ navigation }) {
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    addBook,
+  }, dispatch)
+);
+
+export default connect(null, mapDispatchToProps)(AddNewBook);
+
+export function AddNewBook({ navigation }) {
+    const [isLoading, setLoading] = useState(true);
+
     const [bookNameValue, setBookNameValue] = useState('');
     const [bookDescriptionValue, setBookDescriptionValue] = useState('');
 
@@ -22,6 +34,11 @@ export default function AddNewBook({ navigation }) {
         body: JSON.stringify(bookObjectBody)
       })
         .then((response) => response.json())
+        .then((newBook) => 
+          {
+            props.addBook(newBook);
+          }
+        )
         .catch((error) => console.error(error))
 
       setBookNameValue('');

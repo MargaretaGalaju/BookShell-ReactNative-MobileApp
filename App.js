@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import Navigator from './routes/homeStack';
+import booksReducer from './store/BooksReducer';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux'
+
+const store = createStore(booksReducer);
 
 const getFonts = () => {
   return Font.loadAsync({
@@ -17,7 +22,9 @@ export default function App() {
 
   if (fontsLoaded) {
     return (
-      <Navigator />
+      <Provider store={store}>
+        <Navigator />
+      </Provider>
     );
   } else {
     return (
