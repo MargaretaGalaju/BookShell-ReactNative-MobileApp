@@ -13,8 +13,6 @@ const mapDispatchToProps = dispatch => (
 export default connect(null, mapDispatchToProps)(AddNewBook);
 
 export function AddNewBook({ navigation }) {
-    const [isLoading, setLoading] = useState(true);
-
     const [bookNameValue, setBookNameValue] = useState('');
     const [bookDescriptionValue, setBookDescriptionValue] = useState('');
 
@@ -62,7 +60,7 @@ export function AddNewBook({ navigation }) {
                   style={styles.addInput}
                   placeholder="Add book description"
               />
-              <TouchableOpacity onPress={onAddButtonClick} style={styles.appButtonContainer}>
+              <TouchableOpacity testId="addNewBookButton" onPress={onAddButtonClick} style={styles.appButtonContainer}>
                   <Text style={styles.appButtonText}>Add book</Text>
               </TouchableOpacity>
           </View>
