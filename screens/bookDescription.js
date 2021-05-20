@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, ActivityIndicator, View, TouchableOpacity, FlatList } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
+import { styles } from '../assets/styles/styles'
 
 export default function BookDescription({ navigation }) {
        return (
-        <View style={{ flex: 1, padding: 24 }}>
-            <Text style={{fontFamily: 'montserrat-regular'}}>Book Description: </Text>
-            <Text>{ navigation.getParam('description') }</Text>
+        <View style={styles.container}>
+            <Text style={styles.title}>Book Description: </Text>
+            <Text style={styles.description}>{ navigation.getParam('description') }</Text>
         </View>
     );
   }
-
-  const styles = StyleSheet.create({
-    text: {
-        fontFamily: 'montserrat-regular',
-        marginBottom: 20,
-    }
-  });

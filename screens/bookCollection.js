@@ -1,18 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, ActivityIndicator, View, TouchableHighlight, FlatList } from 'react-native';
+import { Button, Text, ActivityIndicator, View, FlatList } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addBook } from '../store/BooksActions';
 
-export default function BookCollection({ navigation }) {
+const mapStateToProps = (state) => {
+  const { subjects } = state;
+  return { subjects }
+};
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    addBook,
+  }, dispatch)
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookCollection);
+
+export function BookCollection(props) {
     const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
+    const [listOfBooks, setListOfBooks] = useState([]);
 
     const onBookClick = (description) => {
-        navigation.navigate('BookDescription', {description: description});
+      props.navigation.navigate('BookDescription', {description: description});
     }
 
     useEffect(() => {
-      fetch(`https://www.googleapis.com/books/v1/volumes?q=${navigation.getParam('collection')}`)
+      fetch(`https://www.googleapis.com/books/v1/volumes?q=${props.navigation.getParam('collection')}`)
         .then((response) => response.json())
-        .then((json) => setData(json.items))
+        .then((json) => setListOfBooks(json.items))
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
     }, []);
@@ -24,6 +40,7 @@ export default function BookCollection({ navigation }) {
         Name: item.volumeInfo.title,
         Description: item.volumeInfo.description,
       }
+
       fetch(`https://606c6493c445570017a46ed8.mockapi.io/BookShell`, {
         method: 'POST',
         headers: {
@@ -33,22 +50,20 @@ export default function BookCollection({ navigation }) {
         body: JSON.stringify(bookObjectBody)
       })
         .then((response) => response.json())
-        .then((json) => 
+        .then((newBook) => 
           {
-            console.log(json)
+            props.addBook(newBook);
           }
         )
         .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
     }
-  
   
     return (
       <View>
-        <Text style={styles.title}>{ navigation.getParam('collection') ? navigation.getParam('collection') : 'List of books:' }</Text>
+        <Text style={styles.title}>{ props.navigation.getParam('collection') ? props.navigation.getParam('collection') : 'List of books:' }</Text>
             {isLoading ? <ActivityIndicator/> : (
             <FlatList
-                data={data}
+                data={listOfBooks}
                 keyExtractor={({ id }, index) => id}
                 renderItem={({ item }) => (
                 <View style={styles.row}>
@@ -63,38 +78,3 @@ export default function BookCollection({ navigation }) {
       </View>
     );
   }
-
-  const styles = StyleSheet.create({
-    title: {
-      fontFamily: 'montserrat-regular',
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginTop: 20,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center'
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      marginTop: 20,
-      marginRight: 20,
-      marginLeft: 20,
-      padding: 10,
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: '#e1e1e1'
-    },
-    button: {
-      alignContent: 'flex-end',
-      marginLeft: 10,
-    },  
-    bookName: {
-        fontFamily: 'montserrat-regular',
-        flex: 1,
-        maxWidth: '50%',
-        overflow: 'hidden',
-        marginRight: 20,
-    }
-  });

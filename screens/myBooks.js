@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, ActivityIndicator, View, TouchableHighlight, FlatList } from 'react-native';
+import React from 'react';
+import { Button, Text, View, TouchableHighlight, FlatList } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setBooks } from '../store/BooksActions';
 
-export default function MyBooks({ navigation }) {
-    const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
+const mapStateToProps = (state) => {
+  const { subjects } = state;
+  return { subjects }
+};
 
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    setBooks,
+  }, dispatch)
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyBooks);
+
+export function MyBooks(props) {
     const onBookClick = (description) => {
-        navigation.navigate('BookDescription', {description: description});
+      props.navigation.navigate('BookDescription', {description: description});
     }
+
     const addNewBook = () => {
-      navigation.navigate('AddNewBook')
+      props.navigation.navigate('AddNewBook')
     }
-  
-    useEffect(() => {
-      fetch(`https://606c6493c445570017a46ed8.mockapi.io/BookShell`)
-        .then((response) => response.json())
-        .then((json) => {
-          setData(json);
-        }
-        )
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
-    }, []);
   
     return (
       <View style={styles.container}>
         <Text style={styles.title}>'My books:'</Text>
-            {isLoading ? <ActivityIndicator/> : (
             <FlatList
-                data={data}
-                keyExtractor={({ Id }) => Id}
+                data={props.subjects.all_books}
+                keyExtractor={({ Id }) => Id.toString()}
                 inverted={true}
                 renderItem={({ item }) => (
                 <TouchableHighlight  onPress={onBookClick.bind(this, item.Description)} underlayColor="white">
@@ -37,40 +39,7 @@ export default function MyBooks({ navigation }) {
                 </TouchableHighlight>
                 )}
             />
-            )
-        }
         <Button style={styles.button} title="Add New Book" onPress={addNewBook}/>
       </View>
     );
   }
-
-  const styles = StyleSheet.create({
-    container: {
-      height: 'auto',
-      padding: 20,
-      paddingBottom: 100
-    },
-    button: {
-      marginTop: 20,
-      height: 40,
-      width: 80,
-    },
-    title: {
-      fontFamily: 'montserrat-regular',
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginTop: 20,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center'
-    },
-    bookName: {
-      fontFamily: 'montserrat-regular',
-      marginTop: 20,
-      padding: 10,
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: '#e1e1e1'
-    }
-  });
